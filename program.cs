@@ -167,13 +167,13 @@ namespace NeoCortexApiSample
             //int[] rIndex = { 10, 15, 20, 25, 30, 35, 40, 45, 50 };
             //int[] rCount = { 5, 5, 5, 5, 5, 5, 5, 5, 5 };
 
-            int step = 7;
-            //rIndex start
-            int rStart = 0;
-            //number of rindexes
-            int rNum = 25;
-            //staticvalue
-            int rStat = 7;
+            int step = 5;//step increase in rIndex
+            
+            int rStart = 0;//rIndex start
+            
+            int rNum = 25; //number of elements in rindex, rCount
+            
+            int rStat = 5; //staticvalue in rCount
             int[] rIndex = Enumerable.Range(rStart, rNum).Select(x => x * step).ToArray();
             int[] rCount = Enumerable.Repeat(rStat, rNum).ToArray();
 
