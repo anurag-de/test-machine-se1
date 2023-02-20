@@ -164,8 +164,8 @@ namespace NeoCortexApiSample
 
             inputsequence.AddRange(cv.ReadFile());
 
-            //int[] rIndex = { 10, 15, 20, 25, 30, 35, 40, 45, 50 };
-            //int[] rCount = { 5, 5, 5, 5, 5, 5, 5, 5, 5 };
+            //int[] rIndex = { 0 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100 105 110 115 120  };
+            //int[] rCount = { 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 s };
 
             int step = 5;//step increase in rIndex
             
