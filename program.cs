@@ -112,7 +112,7 @@ namespace NeoCortexApiSample
             //Stopwatch stopwatch = new Stopwatch();
             //stopwatch.Start();
             //RunMultiSequenceLearningExperiment();
-            TestLogMultisequenceExperiment();
+            TestLogMultisequenceExperiment(10);
             //CSVFileReader cv = new CSVFileReader(@"D:\general\test_file2.csv", 2);
             //cv.SequenceConsoleOutput();
             //CSVFileReader cv = new CSVFileReader(@"D:\general\test_file2.csv", 2);
@@ -278,18 +278,18 @@ namespace NeoCortexApiSample
         }
 
 
-        private static void TestLogMultisequenceExperiment()
+        private static void TestLogMultisequenceExperiment(int a)
         {
             
             List<double> testsequence = new List<double>();
 
             List<List<double>> listofsequences = new List<List<double>>();
 
-            int[] array1 = Enumerable.Range(0, 6).Select(x => x * 50).ToArray();
-            int[] array2 = Enumerable.Range(1, 6).Select(x => x * 5).ToArray();
+            int[] array1 = Enumerable.Range(0, a).Select(x => x * 50).ToArray();
+            int[] array2 = Enumerable.Range(1, a).Select(x => x * 5).ToArray();
 
 
-            for (int i = 0; i < array1.Length; i++)
+            for (int i = 0; i < a; i++)
             {
             List<double> singleseq= TestAnomaly(array1[i], array2[i]);
             listofsequences.Add(singleseq);
@@ -304,11 +304,23 @@ namespace NeoCortexApiSample
             
             Dictionary<string, List<double>> sequences = new Dictionary<string, List<double>>();
             
-            for (int i = 0; i <= 5; i++)
+            for (int i = 0; i < a; i++)
             {
                 sequences.Add(stringstream[i], listofsequences[i]);
                 
             }
+
+            foreach (KeyValuePair<string, List<double>> item in sequences)
+            {
+                Console.WriteLine("Key: {0}, Values in this sequence", item.Key);                
+                foreach (double value in item.Value)
+                {
+                    Console.Write(" {0}", value);
+                }
+                Console.WriteLine();
+            }
+
+            Console.WriteLine("These sequences that will be used for experiment");
 
             
             foreach(KeyValuePair<string, List<double>> dictitr in sequences)
