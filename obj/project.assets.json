@@ -105,11 +105,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/workspaces/test-machine-se/anomaly-detection.csproj",
+      "projectUniqueName": "/workspaces/test-machine-se1/anomaly-detection.csproj",
       "projectName": "anomaly-detection",
-      "projectPath": "/workspaces/test-machine-se/anomaly-detection.csproj",
+      "projectPath": "/workspaces/test-machine-se1/anomaly-detection.csproj",
       "packagesPath": "/home/codespace/.nuget/packages/",
-      "outputPath": "/workspaces/test-machine-se/obj/",
+      "outputPath": "/workspaces/test-machine-se1/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/codespace/.nuget/NuGet/NuGet.Config"

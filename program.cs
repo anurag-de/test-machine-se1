@@ -240,8 +240,6 @@ namespace NeoCortexApiSample
             //sequences.Add("S2", finaltestsequence2);
             
 
-
-
             //
             // Prototype for building the prediction engine.
 
@@ -266,10 +264,10 @@ namespace NeoCortexApiSample
 
 
 
-            double[] list1 = TestAnomaly(1000, 10);
+            //double[] list1 = TestAnomaly(1000, 10);
 
-            predictor.Reset();
-            PredictNextElement(predictor, list1);
+            /* predictor.Reset();
+            PredictNextElement(predictor, list1); */
 
 
             /*predictor.Reset();
@@ -282,56 +280,51 @@ namespace NeoCortexApiSample
 
         private static void TestLogMultisequenceExperiment()
         {
-            Dictionary<string, List<double>> sequences = new Dictionary<string, List<double>>();
-
+            
             List<double> testsequence = new List<double>();
 
-            CSVFileReader cv = new CSVFileReader("test_file2.csv", 2);
+            List<List<double>> listofsequences = new List<List<double>>();
 
-            testsequence.AddRange(cv.ReadFile());
+            int[] array1 = Enumerable.Range(0, 6).Select(x => x * 50).ToArray();
+            int[] array2 = Enumerable.Range(1, 6).Select(x => x * 5).ToArray();
+
+
+            for (int i = 0; i < array1.Length; i++)
+            {
+            List<double> singleseq= TestAnomaly(array1[i], array2[i]);
+            listofsequences.Add(singleseq);
+            }
 
             List<string> stringstream = new List<string>();
 
-             for (int i = 1; i <= 1000; i++)
+             for (int i = 1; i <= listofsequences.Count; i++)
             {
                 stringstream.Add("S" + i);
             }
             
-
-            for (int i = 10; i <= 30; i += 5)
+            Dictionary<string, List<double>> sequences = new Dictionary<string, List<double>>();
+            
+            for (int i = 0; i <= 5; i++)
             {
-                Stopwatch swh = new Stopwatch();
-
-                swh.Start();
-
-                List<double> finaltestsequence1 = testsequence.GetRange(0, i);
-
-                sequences.Add(stringstream[i], finaltestsequence1);
-
-                //
-                // Prototype for building the prediction engine.
-
-                MultiSequenceLearning experiment = new MultiSequenceLearning();
-                var predictor = experiment.Run(sequences);
+                sequences.Add(stringstream[i], listofsequences[i]);
                 
-                /*double[] list1 = TestAnomaly(1000, i);
-
-                predictor.Reset();
-                PredictNextElement(predictor, list1);*/
-
-                swh.Stop();
-
-                TimeSpan runtime = swh.Elapsed;
-
-                Console.WriteLine("Runtime for training experiment with " + i + " elements in sequence is: " + runtime);
-                
-
             }
 
-
-
-
+            
+            foreach(KeyValuePair<string, List<double>> dictitr in sequences)
+            {
+                Dictionary<string, List<double>> usefuldict = new Dictionary<string, List<double>>(){{ dictitr.Key, dictitr.Value }};
+                Stopwatch swh = Stopwatch.StartNew();
+                MultiSequenceLearning experiment = new MultiSequenceLearning();
+                var predictor = experiment.Run(usefuldict);
+                swh.Stop();
+                Console.WriteLine("Elapsed time for {0}: {1} ms", dictitr.Key, swh.ElapsedMilliseconds);                
+            }
+            
+               
         }
+
+
         private static void PredictNextElement(Predictor predictor, double[] list)
         {
             Debug.WriteLine("------------------------------");
@@ -359,7 +352,7 @@ namespace NeoCortexApiSample
         }
 
 
-        private static double[] TestAnomaly(int a, int b)
+        private static List<double> TestAnomaly(int a, int b)
         {
             List<double> anomalytestsequence = new List<double>();
 
@@ -369,10 +362,12 @@ namespace NeoCortexApiSample
 
             var anomalytestlist1_d = anomalytestsequence.GetRange(a, b);
 
-            double[] anomalytestlist1 = anomalytestlist1_d.ToArray();
+            //double[] anomalytestlist1 = anomalytestlist1_d.ToArray();
 
-            return anomalytestlist1;
+            //return anomalytestlist1;
+            return anomalytestlist1_d;
 
         }
     }
+
 }
