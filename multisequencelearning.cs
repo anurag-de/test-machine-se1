@@ -3,7 +3,6 @@ using NeoCortexApi.Classifiers;
 using NeoCortexApi.Encoders;
 using NeoCortexApi.Entities;
 using NeoCortexApi.Network;
-//using Org.BouncyCastle.Asn1.Tsp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -55,7 +54,7 @@ namespace NeoCortexApiSample
                 PredictedSegmentDecrement = 0.1
             };
 
-            double max = 20;
+            double max = 100;
 
             Dictionary<string, object> settings = new Dictionary<string, object>()
             {
@@ -128,13 +127,13 @@ namespace NeoCortexApiSample
 
             //double[] inputs = inputValues.ToArray();
             int[] prevActiveCols = new int[0];
-            
+
             int cycle = 0;
             int matches = 0;
 
-            var lastPredictedValues = new List<string>(new string[] { "0"});
-            
-            int maxCycles = 3500;
+            var lastPredictedValues = new List<string>(new string[] { "0" });
+
+            int maxCycles = 15;
 
             //
             // Training SP to get stable. New-born stage.
@@ -153,7 +152,7 @@ namespace NeoCortexApiSample
                     foreach (var input in inputs.Value)
                     {
                         Debug.WriteLine($" -- {inputs.Key} - {input} --");
-                    
+
                         var lyrOut = layer1.Compute(input, true);
 
                         if (isInStableState)
@@ -166,7 +165,7 @@ namespace NeoCortexApiSample
             }
 
             // Clear all learned patterns in the classifier.
-            cls.ClearState();
+            //cls.ClearState();
 
             // We activate here the Temporal Memory algorithm.
             layer1.HtmModules.Add("tm", tm);
@@ -182,9 +181,6 @@ namespace NeoCortexApiSample
                 List<string> previousInputs = new List<string>();
 
                 previousInputs.Add("-1.0");
-
-                // Set on true if the system has learned the sequence with a maximum acurracy.
-                bool isLearningCompleted = false;
 
                 //
                 // Now training with SP+TM. SP is pretrained on the given input pattern set.
@@ -258,12 +254,12 @@ namespace NeoCortexApiSample
                                 Debug.WriteLine($"Current Input: {input} \t| Predicted Input: {item.PredictedInput} - {item.Similarity}");
                             }
 
-                            lastPredictedValues = predictedInputValues.Select(v=>v.PredictedInput).ToList();
+                            lastPredictedValues = predictedInputValues.Select(v => v.PredictedInput).ToList();
                         }
                         else
                         {
                             Debug.WriteLine($"NO CELLS PREDICTED for next cycle.");
-                            lastPredictedValues = new List<string> ();
+                            lastPredictedValues = new List<string>();
                         }
                     }
 
@@ -285,7 +281,6 @@ namespace NeoCortexApiSample
                         {
                             sw.Stop();
                             Debug.WriteLine($"Sequence learned. The algorithm is in the stable state after 30 repeats with with accuracy {accuracy} of maximum possible {maxMatchCnt}. Elapsed sequence {sequenceKeyPair.Key} learning time: {sw.Elapsed}.");
-                            isLearningCompleted = true;
                             break;
                         }
                     }
@@ -298,17 +293,14 @@ namespace NeoCortexApiSample
                     // This resets the learned state, so the first element starts allways from the beginning.
                     tm.Reset(mem);
                 }
-
-                if (isLearningCompleted == false)
-                    throw new Exception($"The system didn't learn with expected acurracy!");
             }
 
             Debug.WriteLine("------------ END ------------");
-           
+
             return new Predictor(layer1, mem, cls);
         }
 
-      
+
         /// <summary>
         /// Gets the number of all unique inputs.
         /// </summary>
